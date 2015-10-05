@@ -1,6 +1,5 @@
 package com.wurmonline.wurmapi.api;
 
-import com.wurmonline.wurmapi.internal.WurmConstants;
 import java.io.File;
 import java.io.IOException;
 
@@ -31,7 +30,7 @@ public class WurmAPI {
     private final MapData mapData;
     
     private WurmAPI(String worldDirectory) throws IOException {
-        this.rootDir = worldDirectory + WurmConstants.FILE_SEPARATOR;
+        this.rootDir = worldDirectory + File.separator;
         File file = new File(rootDir);
         file.mkdirs();
         
@@ -43,7 +42,7 @@ public class WurmAPI {
             throw new IllegalArgumentException("Invalid map size: map with size 2^" + powerOfTwo + " cannot be created");
         }
         
-        this.rootDir = worldDirectory + WurmConstants.FILE_SEPARATOR;
+        this.rootDir = worldDirectory + File.separator;
         File file = new File(rootDir);
         file.mkdirs();
         
