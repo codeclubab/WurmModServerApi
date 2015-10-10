@@ -374,7 +374,7 @@ public final class MapData {
             setCaveTile(x, y, tileType, (short) 51);
         }
         else {
-            setCaveTile(x, y, tileType, (short) 10000);
+            setCaveTile(x, y, tileType, (short) 1000);
         }
     }
     
