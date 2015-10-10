@@ -362,13 +362,32 @@ public final class MapData {
     
     /**
      * Sets tile data inside cave.<br>
-     * Only solid cave walls are allowed - exception will be thrown on attempt to set non-cave tile type or cave type which is not a wall.
+     * Only solid cave walls are allowed - exception will be thrown on attempt to set non-cave tile type or cave type which is not a wall.<br>
+     * This method sets default values for resource counts: 51 for rock tiles and 1000 for veins.
      * 
      * @param x x location in game world.
      * @param y y location in game world.
      * @param tileType type of tile. Only cave walls constants are allowed.
      */
     public void setCaveTile(int x, int y, Tile tileType) {
+        if (tileType == Tile.TILE_CAVE_WALL) {
+            setCaveTile(x, y, tileType, (short) 51);
+        }
+        else {
+            setCaveTile(x, y, tileType, (short) 10000);
+        }
+    }
+    
+    /**
+     * Sets tile data inside cave.<br>
+     * Only solid cave walls are allowed - exception will be thrown on attempt to set non-cave tile type or cave type which is not a wall.
+     * 
+     * @param x x location in game world.
+     * @param y y location in game world.
+     * @param tileType type of tile. Only cave walls constants are allowed.
+     * @param resourceCount number of mining actions needed to deplete vein. Must be higher than 0.
+     */
+    public void setCaveTile(int x, int y, Tile tileType, short resourceCount) {
         if (tileType == null || !tileType.isCave()) {
             throw new IllegalArgumentException("Tile type is null");
         }
@@ -379,11 +398,39 @@ public final class MapData {
             throw new IllegalArgumentException("Tile type is invalid cave type: "+tileType.toString());
         }
         
+        setCaveResourceCount(x, y, resourceCount);
         setCaveTile(x, y, tileType, (short) 0, (byte) 0);
     }
     
     private void setCaveTile(int x, int y, Tile tileType, short height, byte data) {
         caveMesh.setTile(x, y, Tiles.encode(height, (byte) tileType.getId(), data));
+    }
+    
+    /**
+     * @param x x location in game world.
+     * @param y y location in game world.
+     * @return number of mining actions needed to deplete vein.
+     */
+    public short getCaveResourceCount(int x, int y) {
+        final int value = resourcesMesh.getTile(x, y);
+        final int toReturn = (value >> 16) & 0xFFFF;
+        return (short) toReturn;
+    }
+    
+    /**
+     * Sets number of mining actions needed to deplete vein in current location (rock tiles count as veins as well).
+     * 
+     * @param x x location in game world.
+     * @param y y location in game world.
+     * @param resourceCount number of mining actions needed to deplete vein. Must be higher than 0.
+     */
+    public void setCaveResourceCount(int x, int y, short resourceCount) {
+        if (resourceCount <= 0) {
+            throw new IllegalArgumentException("Invalid amount of resources in cave tile: "+resourceCount+", must be higher than 0");
+        }
+        
+        final int value = resourcesMesh.getTile(x, y);
+        resourcesMesh.setTile(x, y, ((resourceCount & 0xFFFF) << 16) + (value & 0xFFFF));
     }
     
     /**
