@@ -357,7 +357,7 @@ public final class MapData {
      * @return cave tile type in location.
      */
     public Tile getCaveTile(int x, int y) {
-        return Tiles.getTile(Tiles.decodeType(surfaceMesh.getTile(x, y)));
+        return Tiles.getTile(Tiles.decodeType(caveMesh.getTile(x, y)));
     }
     
     /**
