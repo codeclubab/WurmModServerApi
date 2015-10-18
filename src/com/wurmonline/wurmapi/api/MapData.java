@@ -548,7 +548,7 @@ public final class MapData {
      * @return map image
      */
     public BufferedImage createCaveDump(boolean showWater, Tile... tiles) {
-        return createFlatDump(false, showWater);
+        return createFlatDump(false, showWater, tiles);
     }
     
     private BufferedImage createFlatDump(boolean isSurface, boolean showWater, Tile... allowedTiles) {
