@@ -12,8 +12,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -544,7 +542,7 @@ public final class MapData {
      * You don't need to save map first to create updated map dump - it is using data from memory.
      * 
      * @param showWater set true if you want to make water visible, false otherwise.
-     * @param tiles ore types to show on cave dump (all will be shown if not specified or null, none if empty)
+     * @param tiles ore types to show on cave dump (all will be shown if not specified or null)
      * @return map image
      */
     public BufferedImage createCaveDump(boolean showWater, Tile... tiles) {
@@ -594,7 +592,7 @@ public final class MapData {
                 final Tile tile = Tiles.getTile(tex);
                 boolean visible = true;
                 
-                if (allowedTiles != null) {
+                if (allowedTiles != null && allowedTiles.length > 0) {
                     visible = false;
                     for (int i = 0; i< allowedTiles.length; i++) {
                         if (allowedTiles[i] == tile) {
