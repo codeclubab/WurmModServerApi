@@ -194,6 +194,10 @@ public final class MapData {
     }
     
     private void setSurfaceTile(int x, int y, Tile tileType, short height, byte data) {
+        if (tileType == null) {
+            tileType = Tile.TILE_DIRT;
+        }
+        
         surfaceMesh.setTile(x, y, Tiles.encode(height, (byte) tileType.getId(), data));
     }
     
@@ -569,6 +573,58 @@ public final class MapData {
                     g = (int) (g * 0.2f + 0.5f * 0.4f * 256f);
                     b = (int) (b * 0.2f + 1.0f * 0.4f * 256f);
                 }
+                
+                data[(x + y * lWidth) * 3 + 0] = r;
+                data[(x + y * lWidth) * 3 + 1] = g;
+                data[(x + y * lWidth) * 3 + 2] = b;
+            }
+        }
+
+        bi2.getRaster().setPixels(0, 0, lWidth, lWidth, data);
+        return bi2;
+    }
+    
+    /**
+     * Creates flat map dump, showing all cave terrain types in different colors.<br>
+     * You don't need to save map first to create updated map dump - it is using data from memory.
+     * 
+     * @return map image
+     */
+    public BufferedImage createCaveDump() {
+        int lWidth = 16384;
+        if (lWidth > getWidth())
+            lWidth = getWidth();
+        int yo = getWidth() - lWidth;
+        if (yo < 0)
+            yo = 0;
+        int xo = getWidth() - lWidth;
+        if (xo < 0)
+            xo = 0;
+
+        final Random random = new Random();
+        if (xo > 0)
+            xo = random.nextInt(xo);
+        if (yo > 0)
+            yo = random.nextInt(yo);
+
+        final BufferedImage bi2 = new BufferedImage(lWidth, lWidth, BufferedImage.TYPE_INT_RGB);
+        final float[] data = new float[lWidth * lWidth * 3];
+        
+        for (int x = 0; x < lWidth; x++) {
+            for (int y = lWidth - 1; y >= 0; y--) {
+                final byte tex = Tiles.decodeType(caveMesh.getTile(x + xo, y + yo));
+
+                final Tile tile = Tiles.getTile(tex);
+                final Color color;
+                if (tile != null) {
+                    color = tile.getColor();
+                }
+                else {
+                    color = Tile.TILE_CAVE_WALL.getColor();
+                }
+                int r = color.getRed();
+                int g = color.getGreen();
+                int b = color.getBlue();
                 
                 data[(x + y * lWidth) * 3 + 0] = r;
                 data[(x + y * lWidth) * 3 + 1] = g;
