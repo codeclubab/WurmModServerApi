@@ -549,12 +549,20 @@ public final class MapData {
     }
     
     private BufferedImage createFlatDump(boolean isSurface, boolean showWater) {
-        final MeshIO usedMesh;
+        final MeshIO terrainMesh;
         if (isSurface) {
-            usedMesh = surfaceMesh;
+            terrainMesh = surfaceMesh;
         }
         else {
-            usedMesh = caveMesh;
+            terrainMesh = caveMesh;
+        }
+        
+        final MeshIO heightMesh;
+        if (isSurface) {
+            heightMesh = surfaceMesh;
+        }
+        else {
+            heightMesh = rockMesh;
         }
         
         int lWidth = 16384;
@@ -578,8 +586,8 @@ public final class MapData {
         
         for (int x = 0; x < lWidth; x++) {
             for (int y = lWidth - 1; y >= 0; y--) {
-                final short height = Tiles.decodeHeight(usedMesh.getTile(x + xo, y + yo));
-                final byte tex = Tiles.decodeType(usedMesh.getTile(x + xo, y + yo));
+                final short height = Tiles.decodeHeight(heightMesh.getTile(x + xo, y + yo));
+                final byte tex = Tiles.decodeType(terrainMesh.getTile(x + xo, y + yo));
 
                 final Tile tile = Tiles.getTile(tex);
                 final Color color;
