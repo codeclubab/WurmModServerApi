@@ -12,6 +12,8 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -542,13 +544,14 @@ public final class MapData {
      * You don't need to save map first to create updated map dump - it is using data from memory.
      * 
      * @param showWater set true if you want to make water visible, false otherwise.
+     * @param tiles ore types to show on cave dump (all will be shown if not specified or null, none if empty)
      * @return map image
      */
-    public BufferedImage createCaveDump(boolean showWater) {
+    public BufferedImage createCaveDump(boolean showWater, Tile... tiles) {
         return createFlatDump(false, showWater);
     }
     
-    private BufferedImage createFlatDump(boolean isSurface, boolean showWater) {
+    private BufferedImage createFlatDump(boolean isSurface, boolean showWater, Tile... allowedTiles) {
         final MeshIO terrainMesh;
         if (isSurface) {
             terrainMesh = surfaceMesh;
@@ -588,15 +591,29 @@ public final class MapData {
             for (int y = lWidth - 1; y >= 0; y--) {
                 final short height = Tiles.decodeHeight(heightMesh.getTile(x + xo, y + yo));
                 final byte tex = Tiles.decodeType(terrainMesh.getTile(x + xo, y + yo));
-
                 final Tile tile = Tiles.getTile(tex);
+                boolean visible = true;
+                
+                if (allowedTiles != null) {
+                    visible = false;
+                    for (int i = 0; i< allowedTiles.length; i++) {
+                        if (allowedTiles[i] == tile) {
+                            visible = true;
+                            break;
+                        }
+                    }
+                }
+
                 final Color color;
                 if (tile != null) {
                     if (isSurface) {
                         color = tile.getColor();
                     }
-                    else {
+                    else if (visible) {
                         color = CaveColors.getColorFor(tile);
+                    }
+                    else {
+                        color = CaveColors.getColorFor(Tile.TILE_CAVE_WALL);
                     }
                 }
                 else {
