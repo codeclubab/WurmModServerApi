@@ -404,7 +404,7 @@ public final class MapData {
         }
         
         setCaveResourceCount(x, y, resourceCount);
-        setCaveTile(x, y, tileType, (short) 0, (byte) 0);
+        setCaveTile(x, y, tileType, (short) -100, (byte) 0);
     }
     
     private void setCaveTile(int x, int y, Tile tileType, short height, byte data) {
