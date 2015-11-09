@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class CaveColors {
     
     private static final Map<Tile, Color> mappings = new HashMap<>();

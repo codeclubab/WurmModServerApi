@@ -8,6 +8,7 @@ import com.wurmonline.mesh.Tiles;
 import com.wurmonline.mesh.Tiles.Tile;
 import com.wurmonline.mesh.TreeData.TreeType;
 import com.wurmonline.wurmapi.api.map.dump.Colorist;
+import com.wurmonline.wurmapi.api.map.dump.DefaultColorist;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -31,8 +32,7 @@ public final class MapData {
     private final MeshIO caveMesh;
     private final MeshIO resourcesMesh;
     private final MeshIO[] allMeshes;
-    private final Colorist colorist;
-    
+
     MapData(String root) throws IOException {
         this.surfaceMesh = MeshIO.open(root + "top_layer.map");
         this.rockMesh = MeshIO.open(root + "rock_layer.map");
@@ -40,18 +40,16 @@ public final class MapData {
         this.caveMesh = MeshIO.open(root + "map_cave.map");
         this.resourcesMesh = MeshIO.open(root + "resources.map");
         allMeshes = new MeshIO[] {surfaceMesh, rockMesh, flagsMesh, caveMesh, resourcesMesh};
-        this.colorist = new Colorist();
     }
-    
-    MapData(String root, int powerOfTwo, Colorist colorist) throws IOException {
+
+    MapData(String root, int powerOfTwo) throws IOException {
         this.surfaceMesh = createMap(root + "top_layer.map", powerOfTwo);
         this.rockMesh = createMap(root + "rock_layer.map", powerOfTwo);
         this.flagsMesh = createMap(root + "flags.map", powerOfTwo);
         this.caveMesh = createMap(root + "map_cave.map", powerOfTwo);
         this.resourcesMesh = createMap(root + "resources.map", powerOfTwo);
         allMeshes = new MeshIO[] {surfaceMesh, rockMesh, flagsMesh, caveMesh, resourcesMesh};
-        this.colorist = colorist;
-        
+
         int halfWidth = getWidth() / 2;
         int halfHeight = getHeight() / 2;
         
@@ -555,11 +553,11 @@ public final class MapData {
     }
 
     public BufferedImage createFlowerDump(boolean showWater) {
-        return createFlatDump(true, showWater, true, false);
+        return createFlatDump(true, showWater, true, false, new DefaultColorist());
     }
 
     public BufferedImage createTreeDump(boolean showWater) {
-        return createFlatDump(true, showWater, false, true);
+        return createFlatDump(true, showWater, false, true, new DefaultColorist());
     }
 
     /**
@@ -575,11 +573,11 @@ public final class MapData {
     }
 
     private BufferedImage createFlatDump(boolean isSurface, boolean showWater, Tile... allowedTiles) {
-        return createFlatDump(isSurface, showWater, false, false, allowedTiles);
+        return createFlatDump(isSurface, showWater, false, false, new DefaultColorist(), allowedTiles);
     }
 
     private BufferedImage createFlatDump(boolean isSurface, boolean showWater, boolean showFlowerTypes,
-                                         boolean showTreeTypes, Tile... allowedTiles) {
+                                         boolean showTreeTypes, Colorist colorist, Tile... allowedTiles) {
         final MeshIO terrainMesh;
         if (isSurface) {
             terrainMesh = surfaceMesh;
@@ -637,9 +635,9 @@ public final class MapData {
                 if (tile != null) {
                     if (isSurface) {
                         if (tile.isGrass() && showFlowerTypes) {
-                            color = colorist.getFlowerColor(encodedTile);
+                            color = colorist.getFlowerColorFor(encodedTile);
                         } else if (tile.isTree() && showTreeTypes) {
-                            color = colorist.getSurfaceColorFor(tile);
+                            color = colorist.getTreeColorFor(encodedTile);
                         } else {
                             color = colorist.getSurfaceColorFor(tile);
                         }

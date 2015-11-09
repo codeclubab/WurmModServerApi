@@ -48,7 +48,7 @@ public class WurmAPI {
         File file = new File(rootDir);
         file.mkdirs();
         
-        this.mapData = new MapData(rootDir, powerOfTwo, new Colorist());
+        this.mapData = new MapData(rootDir, powerOfTwo);
     }
     
     public MapData getMapData() {
