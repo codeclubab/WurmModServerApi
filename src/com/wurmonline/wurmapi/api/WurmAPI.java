@@ -1,5 +1,7 @@
 package com.wurmonline.wurmapi.api;
 
+import com.wurmonline.wurmapi.api.map.dump.Colorist;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -46,7 +48,7 @@ public class WurmAPI {
         File file = new File(rootDir);
         file.mkdirs();
         
-        this.mapData = new MapData(rootDir, powerOfTwo);
+        this.mapData = new MapData(rootDir, powerOfTwo, new Colorist());
     }
     
     public MapData getMapData() {

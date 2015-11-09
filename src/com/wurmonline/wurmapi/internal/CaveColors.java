@@ -32,7 +32,7 @@ public class CaveColors {
     private static void addMapping(Tile tile, Color color) {
         mappings.put(tile, color);
     }
-    
+
     public static Color getColorFor(Tile tile) {
         return mappings.getOrDefault(tile, Color.PINK);
     }
