@@ -445,36 +445,42 @@ public final class MapData {
      * @return map image
      */
     public BufferedImage createMapDump() {
-        int lWidth = 16384;
-        if (lWidth > getWidth())
-            lWidth = getWidth();
-        int yo = getWidth() - lWidth;
-        if (yo < 0)
-            yo = 0;
-        int xo = getWidth() - lWidth;
-        if (xo < 0)
-            xo = 0;
-
-        final Random random = new Random();
-        if (xo > 0)
-            xo = random.nextInt(xo);
-        if (yo > 0)
-            yo = random.nextInt(yo);
-
-        final BufferedImage bi2 = new BufferedImage(lWidth, lWidth, BufferedImage.TYPE_INT_RGB);
-        final float[] data = new float[lWidth * lWidth * 3];
+        return createMapDump(surfaceMesh.getSizeLevel());
+    }
+    
+    /**
+     * Creates classical Wurm Online map dump, with semi-3d terrain.<br>
+     * You don't need to save map first to create updated map dump - it is using data from memory.<br>
+     * Using this method, you can create downscaled version of image (for example, if you want to take a quick look at map without creating full sized preview).
+     * 
+     * @param desiredPowerOfTwo desired output image power of two, or map power of two if it is lower than this value. Must be bigger than 7.
+     * @return map image
+     */
+    public BufferedImage createMapDump(int desiredPowerOfTwo) {
+        if (desiredPowerOfTwo < 7) {
+            throw new IllegalArgumentException("Desired power of two is smaller than 7.");
+        }
+        final int scale = Math.min(desiredPowerOfTwo, surfaceMesh.getSizeLevel());
+        final int scaleDiff = surfaceMesh.getSizeLevel() - scale;
         
-        for (int x = 0; x < lWidth; x++) {
-            int alt = lWidth - 1;
-            for (int y = lWidth - 1; y >= 0; y--) {
-                float node = (float) (getSurfaceHeight(x + xo, y + yo) / (Short.MAX_VALUE / 3.3f));
-                float node2 = x == lWidth - 1 || y == lWidth - 1 ? node : (float) (getSurfaceHeight(x + 1 + xo, y + 1 + yo) / (Short.MAX_VALUE / 3.3f));
+        int downscalePower = 1 << scaleDiff;
+        final int lWidth = getWidth();
+        final int downWidth = getWidth() / downscalePower;
 
-                final byte tex = Tiles.decodeType(surfaceMesh.getTile(x + xo, y + yo));
+        final BufferedImage bi2 = new BufferedImage(downWidth, downWidth, BufferedImage.TYPE_INT_RGB);
+        final float[] data = new float[downWidth * downWidth * 3];
+        
+        for (int x = 0; x < lWidth; x += downscalePower) {
+            int alt = downWidth - 1;
+            for (int y = lWidth - 1; y >= 0; y -= downscalePower) {
+                float node = (float) (getSurfaceHeight(x, y) / (Short.MAX_VALUE / 3.3f));
+                float node2 = x == lWidth - 1 || y == lWidth - 1 ? node : (float) (getSurfaceHeight(x + downscalePower, y + downscalePower) / (Short.MAX_VALUE / 3.3f));
+
+                final byte tex = Tiles.decodeType(surfaceMesh.getTile(x, y));
 
                 final float hh = node;
 
-                float h = ((node2 - node) * 1500) / 256.0f * getWidth() / 128 + hh / 2 + 1.0f;
+                float h = ((node2 - node) * 1500) / 256.0f * downWidth / 128 + hh / 2 + 1.0f;
                 h *= 0.4f;
 
                 float r = h;
@@ -512,17 +518,18 @@ public final class MapData {
                     b = b * 0.2f + 1.0f * 0.4f;
                 }
 
-                final int altTarget = y - (int) (Tiles.decodeHeight(surfaceMesh.getTile(x, y)) * MAP_HEIGHT / 4  / (Short.MAX_VALUE / 3.3f));
+                final int altTarget = y / downscalePower - (int) (Tiles.decodeHeight(surfaceMesh.getTile(x, y)) * MAP_HEIGHT / 4  / (Short.MAX_VALUE / 3.3f)) / downscalePower;
                 while (alt > altTarget && alt >= 0) {
-                    data[(x + alt * lWidth) * 3 + 0] = r * 255;
-                    data[(x + alt * lWidth) * 3 + 1] = g * 255;
-                    data[(x + alt * lWidth) * 3 + 2] = b * 255;
+                    final int coord = (x / downscalePower + alt * downWidth) * 3;
+                    data[coord + 0] = r * 255;
+                    data[coord + 1] = g * 255;
+                    data[coord + 2] = b * 255;
                     alt--;
                 }
             }
         }
 
-        bi2.getRaster().setPixels(0, 0, lWidth, lWidth, data);
+        bi2.getRaster().setPixels(0, 0, downWidth, downWidth, data);
         return bi2;
     }
     
