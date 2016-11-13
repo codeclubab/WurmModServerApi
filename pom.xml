@@ -6,7 +6,7 @@
 
     <groupId>com.wurmonline</groupId>
     <artifactId>WurmModServerApi</artifactId>
-    <version>1.0.0.3</version>
+    <version>1.0.0.5</version>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -19,7 +19,7 @@
                 <version>2.5.2</version>
                 <executions>
                     <execution>
-                        <id>install:com.oracle:ojdbc6:11g</id>
+                        <id>install:com.wurmonline.common</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>install-file</goal>
