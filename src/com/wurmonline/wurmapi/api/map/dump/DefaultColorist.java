@@ -79,39 +79,41 @@ public class DefaultColorist implements Colorist {
 
     private static final Color SURFACE_COLOR_UNKNOWN = Tiles.Tile.TILE_DIRT.getColor();
 
+    @Override
     public Color getFlowerColorFor(GrassData.FlowerType flowerType) {
         return FLOWER_COLOR.getOrDefault(flowerType, FLOWER_COLOR_UNKNOWN);
     }
 
+    @Override
     public Color getFlowerColorFor(int meshEncodedTile) {
         byte grassData = Tiles.decodeData(meshEncodedTile);
         return getFlowerColorFor(GrassData.FlowerType.decodeTileData(grassData));
     }
 
-    public Color getTreeColorFor(int meshEncodedTile) {
-        byte treeData = Tiles.decodeData(meshEncodedTile);
-        return getTreeColorFor(TreeData.TreeType.fromTileData(treeData));
-    }
-
+    @Override
     public Color getTreeColorFor(TreeData.TreeType treeType) {
         return TREE_COLOR.getOrDefault(treeType, TREE_COLOR_UNKNOWN);
     }
 
+    @Override
     public Color getSurfaceColorFor(Tiles.Tile tile) {
         return tile.getColor();
     }
 
+    @Override
     public Color getCaveColorFor(Tiles.Tile tile) {
         return CAVE_COLORS.getOrDefault(tile, CAVE_COLOR_UNKNOWN);
     }
 
+    /**
+     * @return Color for unknown surface tile type.
+     */
+    @Override
     public Color getSurfaceUnknownColor() {
         return SURFACE_COLOR_UNKNOWN;
     }
 
-    /**
-     * @return Color for unknown tile type.
-     */
+    @Override
     public Color getCaveUnknownColor() {
         return CAVE_COLOR_UNKNOWN;
     }
