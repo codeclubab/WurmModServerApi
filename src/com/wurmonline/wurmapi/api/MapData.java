@@ -630,7 +630,7 @@ public final class MapData {
                         if (tile.isGrass() && showFlowerTypes) {
                             color = colorist.getFlowerColorFor(encodedTile);
                         } else if (tile.isTree() && showTreeTypes) {
-                            color = colorist.getTreeColorFor(encodedTile);
+                            color = colorist.getTreeColorFor(tile.getTreeType(Tiles.decodeData(encodedTile)));
                         } else {
                             color = colorist.getSurfaceColorFor(tile);
                         }

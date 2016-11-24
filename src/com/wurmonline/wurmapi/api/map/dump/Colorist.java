@@ -2,6 +2,7 @@ package com.wurmonline.wurmapi.api.map.dump;
 
 import com.wurmonline.mesh.GrassData;
 import com.wurmonline.mesh.Tiles.Tile;
+import com.wurmonline.mesh.TreeData;
 
 import java.awt.*;
 
@@ -13,7 +14,7 @@ public interface Colorist {
 
     Color getFlowerColorFor(int meshEncodedTile);
 
-    Color getTreeColorFor(int meshEncodedTile);
+    Color getTreeColorFor(TreeData.TreeType treeType);
 
     Color getSurfaceColorFor(Tile tile);
 
@@ -26,8 +27,7 @@ public interface Colorist {
     Color getSurfaceUnknownColor();
 
     /**
-     *
-     * @return
+     * @return Color for unknown underground tile type.
      */
     Color getCaveUnknownColor();
 }
