@@ -50,6 +50,7 @@ public class DefaultColorist implements Colorist {
         treeColour.put(TreeData.TreeType.WALNUT, Color.ORANGE);
         treeColour.put(TreeData.TreeType.FIR, Color.GREEN.darker());
         treeColour.put(TreeData.TreeType.LINDEN, Color.PINK);
+        treeColour.put(TreeData.TreeType.ORANGE, Color.ORANGE.brighter());
         TREE_COLOR = Collections.unmodifiableMap(treeColour);
     }
 
@@ -74,6 +75,8 @@ public class DefaultColorist implements Colorist {
         caveColors.put(Tiles.Tile.TILE_CAVE_WALL_ORE_ZINC, new Color(235, 235, 235));
         caveColors.put(Tiles.Tile.TILE_CAVE_WALL_SLATE, Color.BLACK);
         caveColors.put(Tiles.Tile.TILE_CAVE_WALL_MARBLE, Color.WHITE);
+        caveColors.put(Tiles.Tile.TILE_CAVE_WALL_ROCKSALT, Color.CYAN.brighter());
+        caveColors.put(Tiles.Tile.TILE_CAVE_WALL_SANDSTONE, Color.ORANGE.darker());
         CAVE_COLORS = Collections.unmodifiableMap(caveColors);
     }
 
