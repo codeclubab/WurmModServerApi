@@ -25,10 +25,10 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>./lib/common.jar</file>
+                            <file>lib/common-1.3.5.5.jar</file>
                             <groupId>com.wurmonline</groupId>
                             <artifactId>common</artifactId>
-                            <version>1.0</version>
+                            <version>1.3.5.5</version>
                             <packaging>jar</packaging>
                         </configuration>
                     </execution>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.wurmonline</groupId>
             <artifactId>common</artifactId>
-            <version>1.0</version>
+            <version>1.3.5.5</version>
         </dependency>
     </dependencies>
 </project>
