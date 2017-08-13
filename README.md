@@ -1,6 +1,7 @@
 # WurmAPI
 
 [![Release](https://jitpack.io/v/codeclubab/WurmModServerApi.svg)](https://jitpack.io/#codeclubab/WurmModServerApi)
+[![Build Status](https://travis-ci.org/codeclubab/WurmModServerApi.svg?branch=master)](https://travis-ci.org/codeclubab/WurmModServerApi)
 
 Java API for Wurm Unlimited, allowing programmers to create and edit their own WU maps of any kind and size.
 
