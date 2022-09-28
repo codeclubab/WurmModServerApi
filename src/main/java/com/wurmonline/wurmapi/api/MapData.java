@@ -415,7 +415,7 @@ public final class MapData {
         setCaveTile(x, y, tileType, (short) -100, (byte) 0);
     }
     
-    private void setCaveTile(int x, int y, Tile tileType, short height, byte data) {
+    public void setCaveTile(int x, int y, Tile tileType, short height, byte data) {
         caveMesh.setTile(x, y, Tiles.encode(height, tileType.getId(), data));
     }
     
